@@ -1,18 +1,26 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+var
+  express      = require('express'),
+  path         = require('path'),
+  favicon      = require('serve-favicon'),
+  logger       = require('morgan'),
+  cookieParser = require('cookie-parser'),
+  bodyParser   = require('body-parser'),
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+  routes = require('./routes/index'),
+  users  = require('./routes/users'),
+  photos = require('./routes/photos'),
 
-var app = express();
+  app = express()
+;
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views',       path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+// further configuration
+if (app.get('env') === 'development') {
+  app.set('photos', path.join(__dirname, 'public/photos'));
+}
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -22,6 +30,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/', photos.list);
 app.use('/', routes);
 app.use('/users', users);
 
